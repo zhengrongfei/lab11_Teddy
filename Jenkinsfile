@@ -1,11 +1,7 @@
 pipeline {
     agent any
 
-    tools {
-        // 确保 Jenkins 使用 Maven 工具
-        // 'Maven_3_6_3' 是 Maven 工具的名称，你需要在 Jenkins 配置中设置它
-        maven 'Maven_3_6_3'
-    }
+
 
     stages {
           stage('Build'){

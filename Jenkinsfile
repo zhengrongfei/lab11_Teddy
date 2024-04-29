@@ -29,11 +29,7 @@ pipeline {
             }
         }
 
-         stage('pmd') {
-            steps {
-                sh 'mvn pmd:pmd'
-            }
-        }
+         
     }
      post {
         always {

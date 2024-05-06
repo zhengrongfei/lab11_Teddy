@@ -13,7 +13,7 @@ pipeline {
         stage('pmd') {
             steps {
                 // 生成 Javadoc
-                sh 'mvn pmd:pmd'
+                sh 'mvn clean -DskipTests install'
             }
         }
       

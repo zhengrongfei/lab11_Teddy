@@ -16,6 +16,15 @@ pipeline {
                 sh 'mvn clean -DskipTests install'
             }
         }
+
+          stage('Generate Surefire Reports') {
+            steps {
+                // 确保测试报告可以生成，即使测试失败
+                script {
+                    sh 'mvn surefire-report:report'
+                }
+            }
+        }
         
 
         stage('Generate Javadoc') {
@@ -25,13 +34,7 @@ pipeline {
             }
         }
 
-         stage('Generate Surefire Reports') {
-            steps {
-                // 确保测试报告可以生成，即使测试失败
-                sh 'mvn surefire-report:report'
-                }
-            }
-        }
+        
 
         
 

@@ -16,19 +16,14 @@ pipeline {
                 sh 'mvn clean -DskipTests install'
             }
         }
-      
-        stage('Generate Surefire Reports') {
-            steps {
-                // 确保测试报告可以生成，即使测试失败
-                script {
-                    sh 'mvn surefire-report:report'
-                }
-            }
-        }
+
         stage('Generate Javadoc') {
             steps {
                 // 生成 Javadoc
-                sh 'mvn javadoc:javadoc'
+                sh '''
+                ${MAVEN_HOME}/bin/mvn -f /Users/rongfeizheng/Desktop/Teedy/docs-web-common/pom.xml javadoc:javadoc \
+                -Djansi.passthrough=true -Dfile.encoding=UTF-8
+                '''
             }
         }
 

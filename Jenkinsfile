@@ -16,6 +16,15 @@ pipeline {
                 sh 'mvn clean -DskipTests install'
             }
         }
+        stage('Generate Javadoc') {
+            steps {
+                // 生成 Javadoc
+                sh '''
+                ${MAVEN_HOME}/bin/mvn -f /Users/rongfeizheng/Desktop/Teedy/docs-web-common/pom.xml javadoc:javadoc \
+                -Djansi.passthrough=true -Dfile.encoding=UTF-8
+                '''
+            }
+        }
 
         stage('Generate Javadoc') {
             steps {

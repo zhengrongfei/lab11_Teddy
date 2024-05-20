@@ -1,50 +1,46 @@
 pipeline {
     agent any
-
-
-
+    environment {
+        IMAGE_NAME = 'cocozheng/teedy' // 替换为你的 Docker Hub 用户名和镜像名称
+        REGISTRY_CREDENTIALS_ID = '6f8d5d60-2e21-4f7e-9113-dc51468d058d' // 替换为你的 Jenkins 中配置的 Docker Hub 凭证的 ID
+    }
     stages {
-          stage('Build'){
-            steps{
-              sh 'mvn -B -DskipTests clean package'
-            }
-        }
-
-        stage('pmd') {
+        stage('Build Image') {
             steps {
-                // 生成 Javadoc
-                sh 'mvn clean -DskipTests install'
-            }
-        }
-
-          stage('Generate Surefire Reports') {
-            steps {
-                // 确保测试报告可以生成，即使测试失败
                 script {
-                    sh 'mvn surefire-report:report'
+                    // 构建 Docker 镜像并标记
+                    docker.build(IMAGE_NAME)
                 }
             }
         }
-        
-
-        stage('Generate Javadoc') {
+        stage('Push to Docker Hub') {
             steps {
-                // 生成 Javadoc
-                sh 'mvn javadoc:javadoc -Dmaven.javadoc.failOnError=false'
+                script {
+                    // 登录到 Docker Hub 并推送镜像
+                    docker.withRegistry('https://registry.hub.docker.com', REGISTRY_CREDENTIALS_ID) {
+                        docker.image(IMAGE_NAME).push('latest')
+                    }
+                }
             }
         }
-
-        
-
-        
-
-         
+        stage('Deploy Containers') {
+            steps {
+                script {
+                    // 运行三个 Docker 容器实例，每个实例映射到不同的端口
+                    docker.image(IMAGE_NAME).run("-d -p 8082:8080 --name teedy_manual02")
+                    docker.image(IMAGE_NAME).run("-d -p 8083:8080 --name teedy_manual03")
+                    docker.image(IMAGE_NAME).run("-d -p 8084:8080 --name teedy_manual01")
+                }
+            }
+        }
     }
-     post {
+    post {
         always {
-            archiveArtifacts artifacts: '**/target/site/**', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.war', fingerprint: true
+            // 清理步骤，确保停止并删除所有运行的容器，避免端口冲突
+            script {
+                sh "docker stop teedy_manual01 teedy_manual02 teedy_manual03"
+                sh "docker rm teedy_manual01 teedy_manual02 teedy_manual03"
+            }
         }
     }
 }

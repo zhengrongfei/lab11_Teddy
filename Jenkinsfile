@@ -10,6 +10,7 @@ pipeline {
                 script {
                     // 构建 Docker 镜像并标记
                     docker.build(IMAGE_NAME)
+                    sh 'docker images'
                 }
             }
         }

@@ -34,15 +34,4 @@ pipeline {
             }
         }
     }
-   post {
-    always {
-        // 清理步骤，确保停止并删除所有运行的容器，避免端口冲突
-        script {
-            sh """
-            docker ps -a | grep 'teedy_manual' | awk '{print \$1}' | xargs -r docker stop
-            docker ps -a | grep 'teedy_manual' | awk '{print \$1}' | xargs -r docker rm
-            """
-        }
-    }
-}
 }

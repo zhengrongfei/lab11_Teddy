@@ -23,15 +23,6 @@ pipeline {
                 }
             }
         }
-        stage('Deploy Containers') {
-            steps {
-                script {
-                    // 运行三个 Docker 容器实例，每个实例映射到不同的端口
-                    docker.image(IMAGE_NAME).run("-d -p 8082:8080 --name teedy_manual02")
-                    docker.image(IMAGE_NAME).run("-d -p 8083:8080 --name teedy_manual03")
-                    docker.image(IMAGE_NAME).run("-d -p 8084:8080 --name teedy_manual01")
-                }
-            }
-        }
+        
     }
 }

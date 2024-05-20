@@ -18,7 +18,7 @@ pipeline {
                 script {
                     // 登录到 Docker Hub 并推送镜像
                     docker.withRegistry('https://registry.hub.docker.com', REGISTRY_CREDENTIALS_ID) {
-                        docker.image(IMAGE_NAME).push('latest')
+                       // docker.image(IMAGE_NAME).push('latest')
                     }
                 }
             }

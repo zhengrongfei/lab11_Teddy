@@ -33,6 +33,14 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    kubectl('delete -f k8s/deployment.yaml --ignore-not-found=true')
+                    kubectl('apply -f k8s/deployment.yaml')
+                }
+            }
+        }
     }
 
 }
